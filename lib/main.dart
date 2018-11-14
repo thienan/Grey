@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flute_music_player/flute_music_player.dart';
-import 'package:musicplayer/database/database_client.dart';
-import 'dart:async';
 import 'package:musicplayer/musichome.dart';
-
 void main() => runApp(new MyApp());
 
 
@@ -14,11 +10,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
+        canvasColor: Colors.transparent,
         errorColor: Colors.transparent,
 
-        fontFamily: "Quicksand"
+        fontFamily: "Quicksand",
       ),
-      home: new MusicHome(),
+      home: MusicHome(),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/pages/artistcard.dart';
 import 'package:musicplayer/pages/card_detail.dart';
+import 'package:musicplayer/util/artistInfo.dart';
 
 class Artists extends StatefulWidget {
   DatabaseClient db;
@@ -42,40 +43,40 @@ class _stateArtist extends State<Artists> {
   List<Card> _buildGridCards(BuildContext context) {
     return songs.map((song) {
       return Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        color: Colors.transparent,
         margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 18.0),
         elevation: 10.0,
-        child: new InkResponse(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              AspectRatio(
-                aspectRatio: 18 / 16,
-                child: Hero(
-                  tag: song.artist,
-                  child: getImage(song)!=null
-            ? Image.file(getImage(song),height: 120.0,fit: BoxFit.fitWidth,)
-            : Image.asset(
-                    "images/artist.jpg",
-                    height: 120.0,
-                    fit: BoxFit.fitWidth,
+        child: new InkWell(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(6.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                AspectRatio(
+                  aspectRatio: 18 / 16,
+                  child: Hero(
+                    tag: song.artist,
+                    child: GetArtistDetail(artist: song.artist,artistSong: song,)
                   ),
                 ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0,right: 8.0),
-                    child: Text(
-                      song.artist.toUpperCase(),
-                      style: new TextStyle(fontFamily: "Quicksand",fontSize: 13.0,fontWeight: FontWeight.w600,letterSpacing: 2.0),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                Expanded(
+                  child: Container(
+                    color: Colors.white,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                        child: Text(
+                          song.artist.toUpperCase(),
+                          style: new TextStyle(fontFamily: "Quicksand",fontSize: 13.0,fontWeight: FontWeight.w600,letterSpacing: 2.0),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           onTap: () {
             Navigator
@@ -97,6 +98,7 @@ class _stateArtist extends State<Artists> {
             ? new Center(child: new CircularProgressIndicator())
             : Scrollbar(
                   child: new GridView.count(
+                    physics: BouncingScrollPhysics(),
                   crossAxisCount:orientation==Orientation.portrait? 2:4,
                   children: _buildGridCards(context),
                   padding: EdgeInsets.all(10.0),

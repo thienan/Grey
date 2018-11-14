@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/pages/card_detail.dart';
 import 'package:musicplayer/pages/now_playing.dart';
+import 'package:musicplayer/util/artistInfo.dart';
 import 'package:musicplayer/util/lastplay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:musicplayer/util/utility.dart';
@@ -24,7 +25,7 @@ class ArtistCard extends StatefulWidget {
 
 class stateCardDetail extends State<ArtistCard> {
   List<Song> songs;
-    List<Song> albums;
+  List<Song> albums;
 
   bool isLoading = true;
   var image;
@@ -70,7 +71,6 @@ class stateCardDetail extends State<ArtistCard> {
                     forceElevated: false,
                     floating: false,
                     pinned: true,
-
                     backgroundColor: Colors.transparent,
                     flexibleSpace: new FlexibleSpaceBar(
                       title: Text(widget.song.artist,style: TextStyle(color: Colors.white,fontSize: 20.0,fontFamily: "Quicksand",fontWeight: FontWeight.w600,letterSpacing: 1.0),maxLines: 1,overflow: TextOverflow.ellipsis,),
@@ -79,13 +79,7 @@ class stateCardDetail extends State<ArtistCard> {
                         children: <Widget>[
                           Hero(
                             tag: widget.song.artist,
-                            child: image != null
-                                ? new Image.file(
-                                    image,
-                                    fit: BoxFit.cover,
-                                  )
-                                : new Image.asset("images/back.jpg",
-                                    fit: BoxFit.cover),
+                            child: GetArtistDetail(artist: widget.song.artist,artistSong: widget.song,)
                           ),
                         ],
                       ),
@@ -98,13 +92,16 @@ class stateCardDetail extends State<ArtistCard> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            Container(
+                              child: GetArtistDetail(artist: widget.song.artist,artistSong: widget.song,mode: 1,),
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(left: 15.0, top: 15.0, bottom: 10.0),
                               child: Text("Albums".toUpperCase(),style: TextStyle(fontSize: 17.0,fontWeight: FontWeight.w600,fontFamily: "Quicksand",letterSpacing: 1.8),maxLines: 1,overflow: TextOverflow.ellipsis,),
                             ),
                             Container(
                               //aspectRatio: 16/15,
-                              height: 210.0,
+                              height: 205.0,
                               child: new ListView.builder(
                                 itemCount: albums.length,
                                 scrollDirection: Axis.horizontal,
@@ -113,49 +110,46 @@ class stateCardDetail extends State<ArtistCard> {
                                       child: new Card(
                                         elevation: 15.0,
                                         child: new InkResponse(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              SizedBox(
-                                                child: Hero(
-                                                  tag: albums[i].album,
-                                                  child: getImage(albums[i]) != null
-                                                      ? new Image.file(
-                                                          getImage(albums[i]),
-                                                          height: 120.0,
-                                                          width: 180.0,
-                                                          fit: BoxFit.cover,
-                                                        )
-                                                      : new Image.asset(
-                                                          "images/back.jpg",
-                                                          height: 120.0,
-                                                          width: 180.0,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 180.0,
-                                                child: Padding(
-                                                  // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                                                  padding: EdgeInsets.fromLTRB(10.0, 8.0, 0.0, 0.0),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        albums[i].album.toUpperCase(),
-                                                        style: new TextStyle(
-                                                            fontSize: 13.0,
-                                                            fontWeight: FontWeight.w500,
-                                                            color: Colors.black.withOpacity(0.70)),
-                                                        maxLines: 1,
-                                                      ),
-
-                                                    ],
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(6.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  child: Hero(
+                                                    tag: albums[i].album,
+                                                    child: getImage(albums[i]) != null
+                                                        ? new Image.file(
+                                                            getImage(albums[i]),
+                                                            height: 120.0,
+                                                            width: 180.0,
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : new Image.asset(
+                                                            "images/back.jpg",
+                                                            height: 120.0,
+                                                            width: 180.0,
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                                SizedBox(
+                                                  width: 180.0,
+                                                  child: Padding(
+                                                    // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                                    padding: EdgeInsets.fromLTRB(10.0, 8.0, 5.0, 0.0),
+                                                    child: Text(
+                                                      albums[i].album.toUpperCase(),
+                                                      style: new TextStyle(
+                                                          fontSize: 13.5,
+                                                          fontWeight: FontWeight.w500,
+                                                          color: Colors.black.withOpacity(0.70)),
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           onTap: () {
                                             Navigator
